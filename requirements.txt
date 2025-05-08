@@ -1,0 +1,10 @@
+requests
+lxml
+pandas
+streamlit
+python-dateutil
+numpy
+matplotlib
+plotly
+pygwalker
+streamlit_dynamic_filters
