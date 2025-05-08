@@ -69,9 +69,6 @@ with st.sidebar:
     
     st.markdown("---")
 
-    st.markdown("##### Seleccione la página:")
-    main_page = st.page_link("main.py",label="Dashboard",icon="🏠")
-
 
 
 
