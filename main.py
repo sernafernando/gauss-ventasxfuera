@@ -31,44 +31,7 @@ st.logo(image="images/white-g-logo.png",
             icon_image="images/white-g.png")
 
 
-# Configuración inicial
-if "authenticated" not in st.session_state:
-    st.session_state.authenticated = False
 
-site_password = st.secrets["api"]["site_password"]
-# Generar token único para persistir la sesión
-SECRET_KEY =   "Nadie lo sabrá"# Cambiar por una clave única
-SESSION_TOKEN = hashlib.sha256(f"{SECRET_KEY}_auth_token".encode()).hexdigest()
-
-def check_auth():
-    # Verificar parámetro de URL
-    if st.query_params.get("token") == SESSION_TOKEN:
-        st.session_state.authenticated = True
-    
-    if not st.session_state.authenticated:
-        with st.sidebar:
-            st.title("🔐 Acceso Requerido")
-            password = st.text_input("Contraseña", type="password", key="auth_pass")
-            
-            if st.button("Ingresar"):
-                if password == site_password:
-                    st.session_state.authenticated = True
-                    st.query_params["token"] = SESSION_TOKEN
-                    st.rerun()
-                else:
-                    st.error("Contraseña incorrecta ❌")
-        
-        st.stop()
-    
-    if "token" in st.query_params:
-        del st.query_params["token"]
-
-# Decorador para proteger toda la app
-def authenticated(func):
-    def wrapper(*args, **kwargs):
-        check_auth()
-        return func(*args, **kwargs)
-    return wrapper
 
 
 pusername = st.secrets["api"]["username"]
