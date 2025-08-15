@@ -378,20 +378,20 @@ else:
         "Total Markup": f"{total_markup:,.2f}%".replace(',', '.')
     }
     with col_over_envios[1]:
-        center_selector = st.selectbox("Seleccionar como se expresan los montos:", ["Precios con IVA", "Precios sin IVA"])
+        center_selector = st.selectbox("Seleccionar como se expresan los montos:", ["Precios sin IVA", "Precios con IVA"])
     with col_under_envios[1]:
         st.markdown("#### Total Periodo:")
         if center_selector == "Precios sin IVA":
             with st.container(border=True):
                 st.metric("Facturación Total Sin IVA", f"$ {total_limpio:,.0f}".replace(',', '.'))  # Muestra el total_limpio
                 st.metric("Costos Totales Sin IVA", f"$ {total_costo:,.0f}".replace(',', '.'))  # Muestra el total_costo
-                st.metric("Total Ganancia", f"$ {total_ganancia:,.0f}".replace(',', '.'))  # Muestra el total_ganancia
+                #st.metric("Total Ganancia", f"$ {total_ganancia:,.0f}".replace(',', '.'))  # Muestra el total_ganancia
                 st.metric("Total Markup", f"{total_markup:,.2f}%".replace(',', '.'))  # Muestra el total_markup
         elif center_selector == "Precios con IVA":
             with st.container(border=True):
                 st.metric("Facturación Total Con IVA", f"$ {total_ventas_con_IVA:,.0f}".replace(',', '.'))  # Muestra el total_limpio
                 st.metric("Costos Totales Con IVA", f"$ {total_costo_con_IVA:,.0f}".replace(',', '.'))  # Muestra el total_costo
-                st.metric("Total Ganancia", f"$ {total_ganancia_con_iva:,.0f}".replace(',', '.'))  # Muestra el total_ganancia
+                #st.metric("Total Ganancia", f"$ {total_ganancia_con_iva:,.0f}".replace(',', '.'))  # Muestra el total_ganancia
                 st.metric("Total Markup", f"{total_markup_con_iva:,.2f}%".replace(',', '.'))  # Muestra el total_markup
 
     expresion_iva = "Precio_Final_con_IVA"
