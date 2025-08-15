@@ -281,7 +281,10 @@ else:
         
         st.plotly_chart(fig)
 
-
+    # Filtro Sellers
+    sellers_filter = st.secrets["sellers"]["sellers"]
+    pattern_sellers = '|'.join([r'\b' + re.escape(seller) + r'\b' for seller in sellers_filter])
+    df_ventas_por_fuera = df_ventas_por_fuera[df_ventas_por_fuera['Vendedor'].str.contains(pattern_sellers, case=False)]
 
 
     # Main Page
@@ -299,11 +302,11 @@ else:
         st.image(image="images/white-g-logo.png",use_container_width=True)
 
     # Filtro por 'Marca' en el DataFrame
-    unique_brands = df_ventas_por_fuera['Marca'].unique()
+    unique_brands = df_ventas_por_fuera['Marca'].dropna().astype(str).unique()
     sorted_brands = sorted(unique_brands)
     sellers = df_ventas_por_fuera['Vendedor'].unique()    
     sorted_sellers = sorted(sellers)
-    sorted_sellers = ['TODOS'] + sorted_sellers
+    # sorted_sellers = ['TODOS'] + sorted_sellers
 
         
     st.write("Aplicar los filtros en cualquier orden 👇")
@@ -326,23 +329,25 @@ else:
         end_date = st.date_input("Fecha final:", value=df_outside_filter['Fecha'].max() + timedelta(days=1))
 
     with col_selectbox[4]:
-        select_seller = st.selectbox("Vendedor", sorted_sellers, index=0)
-
+        select_seller = st.multiselect('Selecciona vendedores:', sorted_sellers, default=sorted_sellers)
 
 
     df_outside_filter = df_outside_filter[(df_outside_filter['Fecha'] >= pd.to_datetime(start_date)) & 
                         (df_outside_filter['Fecha'] <= pd.to_datetime(end_date))]
 
+    print(select_seller)
     if select_seller != 'TODOS':
-        df_outside_filter = df_outside_filter[df_outside_filter['Vendedor'].str.contains(select_seller, case=False)]
+        df_outside_filter = df_outside_filter[df_outside_filter['Vendedor'].isin(select_seller)]
     #filtro_monto_total = df_outside_filter['Precio_Final_sin_IVA'].sum()
 
 
     day_before = df_outside_filter['Fecha'].max()
     last_day = day_before + timedelta(days=1)
 
-    dynamic_filters = DynamicFilters(df_outside_filter, filters=['Marca','SubCategoría','Categoría', 'Descripción'])
+    cols = ['Marca', 'SubCategoría', 'Categoría', 'Descripción']
+    df_outside_filter[cols] = df_outside_filter[cols].astype(str)
 
+    dynamic_filters = DynamicFilters(df_outside_filter, filters=cols)
     dynamic_filters.display_filters(location='columns', num_columns=4, gap='small')
 
     outside_filtered_df = dynamic_filters.filter_df(except_filter='None')
@@ -451,4 +456,4 @@ else:
     renderer = get_pyg_renderer()
 
     with st.expander("Generar grafico"):
-        renderer.explorer()            
+        renderer.explorer()
